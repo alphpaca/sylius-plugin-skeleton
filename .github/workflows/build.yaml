@@ -91,3 +91,7 @@ jobs:
             -
                 name: Run PHPUnit
                 run: vendor/bin/phpunit --colors=always -c phpunit.xml.dist
+
+            -
+                name: Run architectural tests
+                run: vendor/bin/phparkitect check

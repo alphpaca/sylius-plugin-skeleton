@@ -38,6 +38,7 @@
         "friends-of-behat/symfony-extension": "^2.1",
         "friends-of-behat/variadic-extension": "^1.3",
         "lchrusciel/api-test-case": "^5.0",
+        "phparkitect/phparkitect": "^0.2.30",
         "phpspec/phpspec": "^7.0",
         "phpunit/phpunit": "^8.5",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",
