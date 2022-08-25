@@ -1,6 +1,6 @@
 suites:
-    app:
-        namespace: App
-        psr4_prefix: App
-        src_path: src/
-
+    plugin:
+        namespace: Alphpaca\SyliusSkeletonPlugin
+        psr4_prefix: Alphpaca\SyliusSkeletonPlugin
+        src_path: src/SyliusSkeletonPlugin/src
+        spec_path: src/SyliusSkeletonPlugin/spec
