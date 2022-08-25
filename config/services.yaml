@@ -1,0 +1,22 @@
+parameters:
+    locale: en_US
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    _instanceof:
+        Sylius\Bundle\ResourceBundle\Controller\ResourceController:
+            autowire: false
+        Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType:
+            autowire: false
+
+    App\:
+        resource: '../src/App/*'
+        exclude: '../src/App/{Entity,Migrations,Tests,Kernel.php}'
+
+    App\Controller\:
+        resource: '../src/App/Controller'
+        tags: ['controller.service_arguments']
