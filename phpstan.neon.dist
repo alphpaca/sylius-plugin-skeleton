@@ -1,2 +1,7 @@
 parameters:
     level: 9
+    paths:
+        - src/SyliusSkeletonPlugin/src
+        - src/SyliusSkeletonPlugin/tests
+    excludePaths:
+        - src/SyliusSkeletonPlugin/src/DependencyInjection/*
