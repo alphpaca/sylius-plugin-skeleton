@@ -1,5 +1,6 @@
 imports:
     - vendor/sylius/sylius/src/Sylius/Behat/Resources/config/suites.yml
+    - src/SyliusSkeletonPlugin/tests/Behat/Resources/config/suites.yaml
 
 default:
     formatters:
@@ -28,28 +29,6 @@ default:
                     chrome:
                         api_url: http://127.0.0.1:9222
                         validate_certificate: false
-                chrome_headless_second_session:
-                    chrome:
-                        api_url: http://127.0.0.1:9222
-                        validate_certificate: false
-                chrome:
-                    selenium2:
-                        browser: chrome
-                        capabilities:
-                            browserName: chrome
-                            browser: chrome
-                            version: ""
-                            marionette: null # https://github.com/Behat/MinkExtension/pull/311
-                            chrome:
-                                switches:
-                                    - "start-fullscreen"
-                                    - "start-maximized"
-                                    - "no-sandbox"
-                            extra_capabilities:
-                                unexpectedAlertBehaviour: accept
-                firefox:
-                    selenium2:
-                        browser: firefox
             show_auto: false
 
         FriendsOfBehat\SymfonyExtension: ~
@@ -58,8 +37,7 @@ default:
 
         FriendsOfBehat\SuiteSettingsExtension:
             paths:
-                - "vendor/sylius/sylius/features"
-                - "features"
+                - "src/SyliusSkeletonPlugin/features"
 
     gherkin:
         filters:
