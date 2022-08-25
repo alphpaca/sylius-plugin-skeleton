@@ -1,15 +1,11 @@
 <?php
 
-use PhpCsFixer\Fixer\ClassNotation\VisibilityRequiredFixer;
-use PhpCsFixer\Fixer\Operator\BinaryOperatorSpacesFixer;
+declare(strict_types=1);
+
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 
-return static function (ECSConfig $config): void {
-    $config->import('vendor/sylius-labs/coding-standard/ecs.php');
+return static function (ECSConfig $ecsConfig): void {
+    $ecsConfig->import('vendor/alphpaca/coding-standard/ecs.php');
 
-    $config->skip([
-        VisibilityRequiredFixer::class => ['*Spec.php'],
-    ]);
-
-    $config->ruleWithConfiguration(BinaryOperatorSpacesFixer::class, []);
+    $ecsConfig->paths([__DIR__ . '/src/SyliusSkeletonPlugin/src', __DIR__ . '/src/SyliusSkeletonPlugin/tests']);
 };
