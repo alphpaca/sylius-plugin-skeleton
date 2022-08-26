@@ -15,7 +15,6 @@
 /phpspec.yml
 /phpstan.neon
 /psalm.xml
-/phpunit.xml
 
 /docker-compose.override.yaml
 /docker-compose.override.yml
