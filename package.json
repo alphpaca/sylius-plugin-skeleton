@@ -25,7 +25,7 @@
   },
   "scripts": {
     "build:dev": "./bin/fix-semantic.sh && yarn encore dev",
-    "build:prod": "/bin/fix-semantic.sh && yarn encore production",
+    "build:prod": "./bin/fix-semantic.sh && yarn encore production",
     "lint": "yarn lint:js"
   },
   "repository": {
