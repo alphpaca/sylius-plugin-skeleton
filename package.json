@@ -9,23 +9,25 @@
     "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.18.13",
     "@symfony/webpack-encore": "^3.1.0",
-    "babel-core": "^6.26.3",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
+    "core-js": "^3.25.0",
     "eslint": "^8.22.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-import-resolver-babel-module": "^5.3.1",
     "eslint-plugin-import": "^2.26.0",
     "sass": "^1.54.5",
-    "sass-loader": "^13.0.2"
+    "sass-loader": "^13.0.2",
+    "webpack": "^5.74.0"
   },
   "scripts": {
-    "build:dev": "./bin/fix-semantic.sh && yarn encore dev",
-    "build:prod": "./bin/fix-semantic.sh && yarn encore production",
+    "build:dev": "./bin/fix-js.sh && yarn encore dev",
+    "build:prod": "./bin/fix-js.sh && yarn encore production",
     "lint": "yarn lint:js"
   },
   "repository": {
