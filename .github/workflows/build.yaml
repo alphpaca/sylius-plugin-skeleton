@@ -1,13 +1,11 @@
 name: Build
 
 on:
-    pull_request: ~
     workflow_dispatch: ~
-    push:
-        branches:
-            - main
-    release:
-        types: [created]
+    workflow_run:
+        workflows: ["Static checks"]
+        types:
+            - completed
 
 jobs:
     static-checks:
@@ -21,13 +19,24 @@ jobs:
                 php: ["8.0", "8.1"]
                 symfony: ["5.4.*"]
                 sylius: ["~1.11.7"]
+                node: ["14.x"]
+                mariadb: ["10.4.10"]
 
         env:
             APP_ENV: test
+            DATABASE_URL: "mysql://root:root@127.0.0.1/sylius?charset=utf8mb4&serverVersion=mariadb-${{ matrix.mariadb }}"
 
         steps:
             -
                 uses: actions/checkout@v2
+            -
+                name: Shutdown default MySQL
+                run: sudo service mysql stop
+            -
+                uses: getong/mariadb-action@v1.1
+                with:
+                    mariadb version: "${{ matrix.mariadb }}"
+                    mysql root password: root
             -
                 name: Setup PHP
                 uses: shivammathur/setup-php@v2
@@ -37,6 +46,11 @@ jobs:
                     extensions: intl, gd, opcache, mysql, pdo_mysql
                     tools: symfony
                     coverage: none
+
+            -   name: Install Symfony CLI
+                run: |
+                    curl -sS https://get.symfony.com/cli/installer | bash
+                    mv /home/runner/.symfony5/bin/symfony /usr/local/bin/symfony
 
             -
                 name: Restrict Symfony version
@@ -69,29 +83,81 @@ jobs:
                 run: composer update --no-interaction --no-scripts
 
             -
+                name: Setup Node
+                uses: actions/setup-node@v2
+                with:
+                    node-version: "${{ matrix.node }}"
+
+            -
+                name: Get Yarn cache directory
+                id: yarn-cache
+                run: echo "::set-output name=dir::$(yarn cache dir)"
+
+            -
+                name: Cache Yarn
+                uses: actions/cache@v2
+                with:
+                    path: ${{ steps.yarn-cache.outputs.dir }}
+                    key: ${{ runner.os }}-node-${{ matrix.node }}-yarn-${{ hashFiles('**/package.json **/yarn.lock') }}
+                    restore-keys: |
+                        ${{ runner.os }}-node-${{ matrix.node }}-yarn-
+            -
+                name: Install JS dependencies
+                run: yarn install
+
+            -
+                name: Build assets
+                run: |
+                    bin/console assets:install public -vvv
+                    yarn run encore production
+
+            -
                 name: Dump the environment
                 run: |
+                    echo "DATABASE_URL=$DATABASE_URL" >> .env.$APP_ENV
                     composer dump-env $APP_ENV
             -
                 name: Warmup cache
                 run: bin/console cache:warmup
 
             -
-                name: Run PHPStan
-                run: vendor/bin/phpstan analyse -c phpstan.neon.dist
+                name: Prepare application database
+                run: |
+                    APP_DEBUG=1 bin/console doctrine:database:create -vvv
+                    bin/console doctrine:migrations:migrate -n -vvv
+            -
+                name: Test provided migrations
+                run: |
+                    bin/console doctrine:migrations:migrate first --no-interaction
+                    bin/console doctrine:migrations:migrate latest --no-interaction
+            -
+                name: Validate Database Schema
+                run: bin/console doctrine:schema:validate -vvv
 
             -
-                name: Run Psalm
-                run: vendor/bin/psalm -c psalm.xml.dist
+                name: Test installer
+                run: bin/console sylius:install --no-interaction -vvv
+                continue-on-error: true
 
             -
-                name: Run PHPSpec
-                run: vendor/bin/phpspec run --ansi -f progress --no-interaction -c phpspec.yaml.dist
+                name: Load fixtures
+                run: bin/console sylius:fixtures:load default --no-interaction
+                continue-on-error: true
 
-            -
-                name: Run PHPUnit
-                run: vendor/bin/phpunit --colors=always -c phpunit.xml.dist
+            -   name: Run non-JS Behat
+                run: |
+                    bin/console cache:pool:clear cache.global_clearer
+                    vendor/bin/behat --colors --strict --no-interaction -vvv -f progress --tags="~@javascript&&~@todo&&~@cli"
 
-            -
-                name: Run architectural tests
-                run: vendor/bin/phparkitect check
+            -   name: Run JS Behat
+                run: |
+                    bin/console cache:pool:clear cache.global_clearer
+                    vendor/bin/behat --colors --strict --no-interaction -vvv -f progress --tags="@javascript&&~@todo&&~@cli"
+
+            -   name: Upload Behat logs
+                uses: actions/upload-artifact@v2
+                if: failure()
+                with:
+                    name: "Behat logs (JS, PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }})"
+                    path: etc/build/
+                    if-no-files-found: ignore
