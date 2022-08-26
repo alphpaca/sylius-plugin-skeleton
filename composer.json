@@ -21,7 +21,8 @@
     ],
     "require": {
         "php": "^8.0",
-        "sylius/sylius": "~1.11.7"
+        "sylius/sylius": "~1.11.7",
+        "symfony/webpack-encore-bundle": "^1.15"
     },
     "require-dev": {
         "alphpaca/coding-standard": "^1.0",
