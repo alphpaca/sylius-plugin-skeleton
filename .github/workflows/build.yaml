@@ -8,10 +8,10 @@ on:
             - completed
 
 jobs:
-    static-checks:
+    Build:
         runs-on: ubuntu-20.04
 
-        name: "Static checks (${{ matrix.sylius }}, PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }}, MySQL ${{ matrix.mysql }})"
+        name: "Build (${{ matrix.sylius }}, PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }}, MySQL ${{ matrix.mysql }})"
 
         strategy:
             fail-fast: false
@@ -19,7 +19,7 @@ jobs:
                 php: ["8.0", "8.1"]
                 symfony: ["5.4.*"]
                 sylius: ["~1.11.7"]
-                node: ["14.x"]
+                node: ["14.x", "16.x"]
                 mariadb: ["10.4.10"]
 
         env:
@@ -109,7 +109,7 @@ jobs:
                 name: Build assets
                 run: |
                     bin/console assets:install public -vvv
-                    yarn run encore production
+                    yarn build:prod
 
             -
                 name: Dump the environment
