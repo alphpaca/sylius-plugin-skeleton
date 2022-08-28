@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 CHECK_OS="`uname -s`"
 if [[ "$CHECK_OS" = "Darwin" ]]; then
