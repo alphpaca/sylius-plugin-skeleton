@@ -1,12 +1,11 @@
 <p align="center">
-    <a href="https://sylius.com" target="_blank">
-        <img src="https://demo.sylius.com/assets/shop/img/logo.png" />
+    <a href="https://alphpaca.io" target="_blank">
+        <img src="https://github.com/alphpaca/.github/blob/main/banners/sylius-plugin-skeleton.png?raw=true" />
     </a>
 </p>
 
 <h1 align="center">Sylius Plugin Skeleton</h1>
 
-<p align="center">Boilerplate for starting with Sylius plugin development.</p>
 
 ## Quickstart
 
