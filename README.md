@@ -4,9 +4,6 @@
     </a>
 </p>
 
-<h1 align="center">Sylius Plugin Skeleton</h1>
-
-
 ## Quickstart
 
 1. Run
